@@ -1,6 +1,5 @@
 # Single Lookup Update :
 
-
 ```javascript
  	sinContactID = "1136779000000569290";
  	accID = "1136779000000569096";
@@ -23,9 +22,6 @@ Json Format -- for Updating in Single Lookpup --
 ```json
 {"Lookup":"1136779000000569290"}
 ```
-
-
-
 
 
 ---
@@ -91,9 +87,6 @@ Note - Take Products(Related List) from Deal Record & create quotation with Quot
  
     productList = List();
     for each product in getProductData
-```
-
-```json
     {
         productMap = Map();
         productMap.put("product", {"id": product.get("id")});
@@ -101,9 +94,6 @@ Note - Take Products(Related List) from Deal Record & create quotation with Quot
 //      productMap.put("list_price", product.get("Unit_Price").toDecimal());
         productList.add(productMap);
     }
-```
-
-```javascript
  	info productList;
  
     quoteMap = Map();
@@ -334,9 +324,6 @@ Json Format -- for Adding in Multi-Pickup List --
  	info res;
 
  	for each cont in contList
-```
-
-```json
  	{
  		mp=map();
  		mp.put("add_contacts",accId);
@@ -465,9 +452,6 @@ header.put("Accept","application/vnd.api+json");
 getFileData = zoho.crm.getRelatedRecords("Attachments","Deals",dealId);
 //     info res;
 for each  data in getFileData
-```
-
-```json
 {
  	file = invokeurl
  	[
@@ -491,9 +475,7 @@ for each  data in getFileData
  	];
  	info response.get("data").getJson("attributes").get("Permalink");
 }
-```
 
-```javascript
 return "";
 ```
 
@@ -587,15 +569,10 @@ dealId = "1136779000000758081";
 	getDealData = zoho.crm.getRecordById("Deals", dealId);
 	dealTag = getDealData.get("Tag");
 	if(dealTag == null)
-```
-
-```json
 	{
 	  dealTag = List();
 	}
-```
 
-```javascript
 	newTag = Map();
 	newTag.put("name","POP");
 	dealTag.add(newTag);
@@ -652,9 +629,6 @@ Json Format --
 Method 1 (Without Template)- 
 
 sendmail
-```
-
-```json
 [
 	from :zoho.loginuserid
 	to :recipientEmail
@@ -662,26 +636,18 @@ sendmail
 	message :"Hello " + "This is from test mail" + ",<br><br>Thank you for reaching out!"
 	content type :HTML
 ]
-```
 
-
-```javascript
 Method (With Template)-
 
 recipientEmail = "akashxwork@gmail.com";
 templateId = "1136779000000857005";
 templatedata = invokeurl
-```
-
-```json
 [
 	url :"https://www.zohoapis.in/crm/v8/settings/email_templates/" + templateId
 	type :GET
 	connection:"getdata"
 ];
-```
 
-```javascript
 // info templatedata;
 templatecontent = templatedata.get("email_templates").get("0").get("content");
 // info templatecontent;
@@ -690,9 +656,6 @@ Email = recipientEmail;
 revisedcontent = templatecontent.replaceAll("\$\{!Leads.Full_Name\}",LeadName).replaceAll("\$\{!Leads.Email\}",Email);
 // info revisedcontent;
 sendmail
-```
-
-```json
 [
 from: zoho.adminuserid
 to: recipientEmail
@@ -702,12 +665,9 @@ message: revisedcontent
 ```
 
 
-
-
-
 ---
 
-# File Upload in Upload File(Field) :
+# File Upload in Upload File ( Field ) :
 
 ```javascript
 Note - Get file from attachments and add in file upload field in leads.
@@ -717,34 +677,22 @@ leadId = "1136779000000569198";
 att = zoho.crm.getRelatedRecords("Attachments", "Leads", leadId);
 
 file = invokeurl
-```
-
-```json
 [
 	url: "https://www.zohoapis.in/crm/v2/Leads/" + leadId + "/Attachments/" + att.get(0).get("id")
 	type: GET
 	connection:"zohofile"
 ];
-```
-
-```javascript
 // info file;
 
 file.setParamName("file");
 
 resp = invokeurl 
-```
-
-```json
 [ 
 	url: " https://www.zohoapis.in/crm/v2/files" 
 	type: POST 
 	files: file 
 	connection: "zohofile" 
 ]; 
-```
-
-```javascript
 // info resp;
 
 fileid = resp.get("data").get(0).get("details").get("id"); 
@@ -776,20 +724,14 @@ attId = leadRecord.get("File_Upload").getJSON("attachment_Id");
 // info attId;
 
 		file = invokeurl
-```
-
-```json
 		[
 			url :"https://www.zohoapis.in/crm/v2/Leads/" + leadId + "/Attachments/" + attId
 			type :GET
 			connection:"zohofile"
 		];
-```
 
-```javascript
 		resp = zoho.crm.attachFile("Leads", leadId, file);
 		info resp;
-
 
 ```
 
@@ -800,15 +742,15 @@ attId = leadRecord.get("File_Upload").getJSON("attachment_Id");
 
 
 ```javascript
-    // console.log(".................START.................");
+// console.log(".................START.................");
 
-    const stage = ZDK.Page.getField("Stage").getValue();
+const stage = ZDK.Page.getField("Stage").getValue();
 
-    if (stage !== "Closed Won") {
-        ZDK.Client.showAlert(`Deal must be "Closed Won" to proceed.`);
-        // console.log ("It's not Closed Won");
-        return;
-    }
+if (stage !== "Closed Won") {
+    ZDK.Client.showAlert(`Deal must be "Closed Won" to proceed.`);
+    // console.log ("It's not Closed Won");
+    return;
+}
 
 const items = ZDK.Page.getSubform("Items").getValues();
 // console.log(items);
@@ -907,9 +849,6 @@ Note - Take from Quotes Items & add products in same Deal Records(Both are Relat
 	productList = List();
 	
 	for each product in products
-```
-
-```json
     {
 		productId = product.get("product").get("id");
 		mp = Map();
@@ -917,9 +856,6 @@ Note - Take from Quotes Items & add products in same Deal Records(Both are Relat
 		info update; 
     }
 ```
-
-
-
 
 
 ---
@@ -946,20 +882,11 @@ year = currentYear - dobYear;
 month = currentMonth - dobMonth;
 day = currentDay - dobDay;
 if(month < 0)
-```
-
-```json
 {
 	year = year - 1;
 	month = month + 12;
 }
-```
-
-```javascript
 if(day < 0)
-```
-
-```json
 {
 	month = month - 1;
 	if(month < 0)
@@ -967,17 +894,17 @@ if(day < 0)
 		year = year - 1;
 		month = month + 12;
 	}
+
 	prevMonth = currentMonth - 1;
 	if(prevMonth == 0)
 	{
 		prevMonth = 12;
 	}
+
 	daysInMonth = {1:31,2:28,3:31,4:30,5:31,6:30,7:31,8:31,9:30,10:31,11:30,12:31};
 	day = day + daysInMonth.get(prevMonth);
 }
-```
 
-```javascript
 age = year + "y " + month + "m " + day + "d " + " | " + currentHour + ":" + currentMinute + ":" + currentSecond;
 info age;
 
@@ -998,14 +925,16 @@ Note - Take Product which is shares(Related List) from Deal Record & create invo
 dealId = "7171648000000601064";
 getDealData = zoho.crm.getRecordById("Deals",dealId);
 shareName = getDealData.get("Share_Name");
+// info getDealData;
 
 if( shareName == null){
 shareId = getDealData.get("Share_Name").get("id");
 shareQuantity = getDealData.get("Share_Quantity");
 sellRate = getDealData.get("Sell_Rate");
-// info getDealData;
 contactId = getDealData.get("Contact_Name").get("id");
+
 getContactData = zoho.crm.getRecordById("Contacts",contactId);
+
 contactCountry = getContactData.get("Mailing_Country");
 contactState = getContactData.get("Mailing_State");
 contactCity = getContactData.get("Mailing_City");
@@ -1034,9 +963,10 @@ mp.put("Shipping_State",contactState);
 mp.put("Shipping_India",contactCountry);
 info mp;
 
- res = zoho.crm.createRecord("Invoices", mp);
- info res;
-}else{
+res = zoho.crm.createRecord("Invoices", mp);
+info res;
+}
+else{
 	info "nahi hoga";
 }
 ```
@@ -1069,9 +999,6 @@ Json Format -- Create Invoice and Show in Deals (Transaction) --
 ```
 
 
-
-
-
 ---
 
 # Create a Duplicate List in Related List using Related Function in Leads (part-1):
@@ -1082,16 +1009,16 @@ leadId = "1158761000000572119";
 getLeadData = zoho.crm.getRecordById("Leads",leadId);
 leadMobile = getLeadData.getJson("Mobile");
 leadPhone = getLeadData.getJson("Phone");
+
 // Check Lead Duplicate...
 searchLead = zoho.crm.searchRecords("Leads","(Phone:equals:" + leadPhone + ") or (Mobile:equals:" + leadPhone + ") or (Phone:equals:" + leadMobile + ") or (Mobile:equals:" + leadMobile + ")");
 info searchLead;
+
 // Check Contact Duplicate...
 searchContact = zoho.crm.searchRecords("Contacts","(Phone:equals:" + leadPhone + ") or (Mobile:equals:" + leadPhone + ") or (Phone:equals:" + leadMobile + ") or (Mobile:equals:" + leadMobile + ")");
 info searchContact;
-if(searchLead.size() > 1 || searchContact.size() > 0)
-```
 
-```json
+if(searchLead.size() > 1 || searchContact.size() > 0)
 {
 	relatedListXML = "<record>";
 	n = 0;
@@ -1114,9 +1041,7 @@ if(searchLead.size() > 1 || searchContact.size() > 0)
 	}
 	relatedListXML = relatedListXML + "</record>";
 }
-```
 
-```javascript
 return relatedListXML;
 ```
 
@@ -1163,9 +1088,6 @@ XML format --
 
 ```javascript
 string related_list.create_list_in_leads(String leadId)
-```
-
-```json
 {
 // leadId = "1158761000000572119";
 getLeadData = zoho.crm.getRecordById("Leads",leadId);
@@ -1263,13 +1185,9 @@ XML format for Duplicate List in Related List --
 
 # Create a Duplicate List in Related List using Related Function in Leads (part-3):
 
-
 ```javascript
 leadData = zoho.crm.getRecordById("Leads",leadId);
 if(leadData.containsKey("Mobile") && leadData.get("Mobile") != null)
-```
-
-```json
 {
 	mobile = leadData.get("Mobile");
 	search_lead = zoho.crm.searchRecords("Leads","(Mobile:equals:" + mobile + ")");
@@ -1329,13 +1247,7 @@ if(leadData.containsKey("Mobile") && leadData.get("Mobile") != null)
 	}
 	return relatedListXML;
 }
-```
-
-```javascript
 else
-```
-
-```json
 {
 	return "<error><message>No matching records found.</message></error>";
 }
@@ -1384,9 +1296,6 @@ XML format --
 
 ```javascript
 string related_list.preview_workdrive_attachments(String leadId)
-```
-
-```json
 {
 workdriveFolderId = "lpjr97c99675b349f4fa9bca794815e2defae";
 header = Map();
@@ -1440,7 +1349,6 @@ return relatedListXML;
 
 XML format for Duplicate List in Related List --
 
-
 ```javascript
 <record>
 	<row no='0'>
@@ -1489,7 +1397,6 @@ XML format for Duplicate List in Related List --
 
 # Get Files from Workdrive and Show in Related List using XML  (part-2) :
 
-
 ```javascript
 // caseId = "1043751000008644045";
 caseData = zoho.crm.getRecordById("Cases",caseId);
@@ -1503,24 +1410,16 @@ workdriveFolderId = url.subString(url.lastIndexOf("/") + 1);
 header = Map();
 header.put("Accept","application/vnd.api+json");
 response = invokeurl
-```
-
-```json
 [
 	url :"https://www.zohoapis.in/workdrive/api/v1/files/" + workdriveFolderId + "/files"
 	type :GET
 	headers:header
 	connection:"contactworkdrive"
 ];
-```
 
-```javascript
 files = response.get("data");
 // info files;
 if(files.size() > 0)
-```
-
-```json
 {
 	relatedListXML = "<record>";
 	count = 0;
@@ -1557,19 +1456,11 @@ if(files.size() > 0)
 		relatedListXML = relatedListXML + "<row no='" + count + "'><FL val='Type'>Action</FL><FL val='Size' link='true' url='" + url + "'>⬆️ Click to Upload</FL></row></record>";
 	// info relatedListXML;
 }
-```
-
-```javascript
 else
-```
-
-```json
 {
 	relatedListXML = "<error><message>No WorkDrive Files/Folders</message></error>";
 }
-```
 
-```javascript
 return relatedListXML;
 
 
@@ -1588,38 +1479,25 @@ dealData = zoho.crm.getRecordById("Deals",dealId);
 url = dealData.get("Contact_Data_Link");
 // info url;
 if(url == null || url.isEmpty())
-```
-
-```json
 {
 	return "<error><message>Please attach a WorkDrive link before proceeding.</message></error>";
 }
-```
-
-```javascript
 workdriveFolderId = url.subString(url.lastIndexOf("/") + 1);
 // info workdriveFolderId;
+
 header = Map();
 header.put("Accept","application/vnd.api+json");
 response = invokeurl
-```
-
-```json
 [
 	url :"https://www.zohoapis.in/workdrive/api/v1/files/" + workdriveFolderId + "/files"
 	type :GET
 	headers:header
 	connection:"contactworkdrive"
 ];
-```
 
-```javascript
 files = response.get("data");
 // info files;
 if(files.size() > 0)
-```
-
-```json
 {
 	relatedListXML = "<record>";
 	count = 0;
@@ -1656,19 +1534,11 @@ if(files.size() > 0)
 	relatedListXML = relatedListXML + "<row no='" + count + "'><FL val='Type'>Action</FL><FL val='Size' link='true' url='" + url + "'>⬆️ Click to Upload</FL></row></record>";
 	// info relatedListXML;
 }
-```
-
-```javascript
 else
-```
-
-```json
 {
 		relatedListXML = "<record><row no='0'><FL val=''>No file uploaded yet</FL><FL val='' link='true' url='" + url + "'>⬆️ Click here to upload a file</FL></row></record>";
 }
-```
 
-```javascript
 return relatedListXML;
 
 
@@ -1686,17 +1556,12 @@ mobile = entityMap.get("Mobile");
 response = Map();
 // if(ifNull(mobile, "").matches("^[0-9]{10}$") == false) 
 if(mobile != "" && mobile.matches("^[0-9]{10}$") == false)
-```
-
-```json
 {
 	response.put('status','error');
 	response.put('message','Please enter a valid 10-digit mobile number.');
 	return response;
 }
-```
 
-```javascript
 return "";
 
 
@@ -1714,36 +1579,19 @@ stage = ifNull(entityMap.get("Stage"),"");
 recordID = entityMap.get("id");
 response = Map();
 if(recordID == null)
-```
-
-```json
 {
 	response.put('status','success');
 }
-```
-
-```javascript
 else if(stage != "Closed Won")
-```
-
-```json
 {
 	response.put('status','error');
 	response.put('message','Not allowed to change stage');
 }
-```
-
-```javascript
 else
-```
-
-```json
 {
 	response.put('status','success');
 }
-```
 
-```javascript
 return response;
 
 
@@ -1774,7 +1622,6 @@ if (service) {
     // }
 }
 
-
 ```
 
 
@@ -1786,9 +1633,6 @@ if (service) {
 ```javascript
 product_data = zoho.crm.getRecords("Products",0,200,{"cvid":785423000001339227});
 for each  rec in product_data
-```
-
-```json
 {
 	id = rec.get("id");
 	// 	info id;
@@ -1802,16 +1646,13 @@ for each  rec in product_data
 	Product_Code = Product_Code.replaceAll("null/","");
 	res = zoho.crm.updateRecord("Products",id,{"Product_Code":Product_Code,"up":true});
 }
+
 ```
-
-
-
 
 
 ---
 
 # Find Duplicates in Leads & Contacts Module using Clientscript (Part - 1) :
-
 
 ```javascript
 const leadMobile = ZDK.Page.getField("Mobile").getValue();
@@ -1931,17 +1772,12 @@ if (isLeadDuplicate && isContactDuplicate) {
 caseId = "1043751000008644045";
 	
 response = invokeurl
-```
-
-```json
 [
 	url: "https://www.zohoapis.in/crm/v8/Cases/" + caseId + "/actions/blueprint"
 	type: GET
 	connection:"zoho_crm"
 ];
-```
 
-```javascript
 // info response.get("blueprint").get("transitions");
 
 dataMap = Map();
@@ -1959,20 +1795,16 @@ blueprintList.add(blueprint1);
 param = Map();
 param.put("blueprint", blueprintList);
 info param;
-	update = invokeurl
-```
-
-```json
+update = invokeurl
 [
 	url: "https://www.zohoapis.in/crm/v8/Cases/" + caseId + "/actions/blueprint"
 	type: PUT
 	parameters: param.toString()
 	connection:"zoho_crm"
 ];
-```
 
-```javascript
 info update;
+
 ```
 
 Json Format --
@@ -2016,9 +1848,6 @@ dealId = "1043751000007135808";
 get_related_data = zoho.crm.getRelatedRecords("Cases", "Deals", dealId);
 
 if(get_related_data.size() > 0)
-```
-
-```json
 {
 	for each record in get_related_data
 	{
@@ -2074,15 +1903,10 @@ info number.replaceAll("[^0-9]","");
 
 num = "987654432101234";
 if(num.length() > 10)
-```
-
-```json
 {
 	num = num.subString(0,10);
 }
-```
 
-```javascript
 info num;
 
 
@@ -2098,19 +1922,13 @@ info num;
 deal_id = "1158761000000660337";
 
 response = invokeurl
-```
-
-```json
 [
 url: "https://www.zohoapis.in/crm/v8/Deals/" + deal_id
 type: GET
 connection: "zohocrm"
 ];
-```
 
-```javascript
 info response.get("data").getJson("Rollup_Summary");
-
 
 ```
 
@@ -2124,9 +1942,6 @@ info response.get("data").getJson("Rollup_Summary");
 deal_id = "1043751000007110324";
 deal_related = zoho.crm.getRelatedRecords("Cases","Deals",deal_id);
 for each  case in deal_related
-```
-
-```json
 {
 	status = case.getJSon("Status");
 	app_related = zoho.crm.getRelatedRecords("Tasks","Cases",case.getJson("id"));
@@ -2144,10 +1959,6 @@ for each  case in deal_related
 }
 ```
 
-
-
-
-
 ---
 
 # Create Multiple Deal with certain condition (Multiple Countries) :
@@ -2158,9 +1969,6 @@ res = zoho.crm.getRecordById("Deals",id);
 Country_of_Interest = res.get("Country_of_Interest");
 istrue = true;
 if(Country_of_Interest.size() > 1)
-```
-
-```json
 {
 	for each  new in Country_of_Interest
 	{
@@ -2214,13 +2022,7 @@ if(Country_of_Interest.size() > 1)
 		}
 	}
 }
-```
-
-```javascript
 else
-```
-
-```json
 {
 	dealname = res.get("Deal_Name");
 	countryofinterest = res.get("Country_of_Interest");
@@ -2236,13 +2038,9 @@ else
 ```
 
 
-
-
-
 ---
 
-# Update URl from Contact to Deal to Application(Case) Module if there is not link in contact then it will create :
-
+# Update URL from Contact to Deal to Application(Case) Module if there is not link in contact then it will create :
 
 ```javascript
 parentFolderId = "mp021cbba2181fc654b57b77c7a24cd2e87dd";
@@ -2250,11 +2048,10 @@ parentFolderId = "mp021cbba2181fc654b57b77c7a24cd2e87dd";
 caseData = zoho.crm.getRelatedRecords("Cases","Deals",dealId);
 dealData = zoho.crm.getRecordById("Deals",dealId);
 dealURL = dealData.get("Contact_Data_Link");
-isUpdated = false;
-if(dealURL != null && !dealURL.isEmpty())
-```
 
-```json
+isUpdated = false;
+
+if(dealURL != null && !dealURL.isEmpty())
 {
 	if(caseData != null && caseData.size() > 0)
 	{
@@ -2288,30 +2085,19 @@ if(dealURL != null && !dealURL.isEmpty())
 		return "No Application found for this Deal";
 	}
 }	
-```
 
-
-```javascript
 contactNameFromDeal = dealData.get("Contact_Name");
 if(contactNameFromDeal == null)
-```
-
-```json
 {
 	return "No Contact linked to Deal";
 }
-```
 
-```javascript
 contactId = contactNameFromDeal.get("id");
 contactData = zoho.crm.getRecordById("Contacts",contactId);
 contactName = contactData.get("Full_Name");
 contactURL = contactData.get("Contact_Data_Link1");
 
 if(contactURL != null && !contactURL.isEmpty())
-```
-
-```json
 {
 // update deal "Contact_Data_Link"....
 	updateDealMap = Map();
@@ -2339,14 +2125,7 @@ if(contactURL != null && !contactURL.isEmpty())
 		return "Contact module link synced to Deal :- " + contactURL;
 	}
 }
-```
-
-
-```javascript
 else
-```
-
-```json
 {
 	// create folder in workdrive...
 	folderName = contactName + "_" + contactId;
@@ -2385,9 +2164,6 @@ else
 ```
 
 
-
-
-
 ---
 
 # Create a new call record using deluge (Part - 1):
@@ -2412,7 +2188,6 @@ mp.put("Call_Start_Time",isoDateTime);
 // mp.put("","");
 create = zoho.crm.createRecord("Calls", mp);
 info create;
-
 
 ```
 
@@ -2441,21 +2216,14 @@ payload = Map();
 payload.put("data", dataList);
 
 response = invokeurl
-```
-
-```json
 [
     url :"https://www.zohoapis.in/crm/v8/Calls"
     type : POST
     parameters : payload.toString()
 	connection : "zohocrm"
 ];
-```
 
-
-```javascript
 info response;
-
 
 ```
 
@@ -2487,22 +2255,14 @@ mobile = input.Registered_Mobile;
 dob = input.Date_of_Birth;
 contact_id = list();
 if(mobile.startsWith("+91"))
-```
-
-```json
 {
 	mobile = mobile.substring(3);
 }
-```
 
-```javascript
 // First search: Mobile
 critera = "(Mobile:equals:" + mobile + ")";
 search_contact = zoho.crm.searchRecords("Contacts",critera);
 if(search_contact.size() > 0)
-```
-
-```json
 {
 	contact_dob = search_contact.get(0).get("Date_of_Birth");
 	if(contact_dob != null && contact_dob == dob.toString("yyyy-MM-dd"))
@@ -2510,17 +2270,20 @@ if(search_contact.size() > 0)
 		contact_id = search_contact.get(0).get("id").toLong();
 	}
 }
-```
 
-```javascript
 page_url = "https://creatorapp.zohopublic.com/sanjay645/application-tracker/page-perma/Show_Deal_And_Process_stage/wa8J2R1JXevb4J7naY7BRpDUkO7wnFPjxsJmwfBxT6Gj0ZUmnwDz9uSuHPjm2xDKZJKCDanx5VT7Og7ss5shyYYTT7WOR7df1nOp" + "?uid=" + contact_id;
 openUrl(page_url,"same window");
+
 // + if(search_with_dob.size() > 0,"","&bd=" + isDob);
 //  + "&bd=" + isDob;
+
 // mobile = zoho.encryption.base64Encode(mobile);
 // openUrl("#Page:Show_Deal_And_Process_stage?Registered_Mobile=" + mobile,"same window");
+
 // detail = https://creatorapp.zohopublic.com/sanjay645/application-tracker/form-perma/Customer_Detail/DxkPY6WrhORFuajTa7UgNSFPwdgukrqAbDSsWHT3Eq5PfXstBZPenmKQXuyZQS6FEVyxGPxaGMy09WEnAS7fvdB36EKms3X0FOnJ
+
 //   page = https://creatorapp.zohopublic.com/sanjay645/application-tracker/page-perma/Show_Deal_And_Process_stage/wa8J2R1JXevb4J7naY7BRpDUkO7wnFPjxsJmwfBxT6Gj0ZUmnwDz9uSuHPjm2xDKZJKCDanx5VT7Og7ss5shyYYTT7WOR7df1nOp
+
 ```
 
 Checking If Moile is null or not ( function ) -
@@ -2528,62 +2291,39 @@ Checking If Moile is null or not ( function ) -
 
 ```javascript
 if(input.Checkbox.isEmpty())
-```
-
-```json
 {
 	hide Date_of_Birth;
 	input.Add_Notes = "<style>input.zc-live-primary-btn{display:none;}</style>";
 	enable Registered_Mobile;
 	return;
 }
-```
 
-```javascript
 mobile = input.Registered_Mobile;
 if(mobile == null || mobile.trim() == "")
-```
-
-```json
 {
 	alert "Mobile number is required to proceed. Please enter it first.";
 	input.Checkbox = List();
 	enable Registered_Mobile;
 	return;
 }
-```
 
-```javascript
 if(mobile.startsWith("+91"))
-```
-
-```json
 {
 	mobile = mobile.substring(3);
 }
-```
 
-```javascript
 if(ifNull(mobile,"").matches("^[0-9]{10}$") == false)
-```
-
-```json
 {
 	alert "Please enter a valid 10-digit mobile number.";
 	input.Checkbox = List();
 	enable Registered_Mobile;
 	return;
 }
-```
 
-```javascript
 disable Registered_Mobile;
 criteria = "(Mobile:equals:" + mobile + ")";
 search_contact = zoho.crm.searchRecords("Contacts",criteria);
 if(search_contact.size() == 0)
-```
-
-```json
 {
 	alert "No account is associated with the provided mobile number.";
 	hide Date_of_Birth;
@@ -2593,16 +2333,11 @@ if(search_contact.size() == 0)
 	enable Registered_Mobile;
 	return;
 }
-```
 
-```javascript
 contact = search_contact.get(0);
 contact_dob = contact.get("Date_of_Birth");
 contact_owner = contact.get("Owner").get("name");
 if(contact_dob == null)
-```
-
-```json
 {
 	alert "Date of Birth is missing. Please contact your account manager - " + contact_owner;
 	hide Date_of_Birth;
@@ -2611,13 +2346,7 @@ if(contact_dob == null)
 	input.Registered_Mobile = "";
 	enable Registered_Mobile;
 }
-```
-
-```javascript
 else
-```
-
-```json
 {
 	show Date_of_Birth;
 	input.Add_Notes = "<style>input.zc-live-primary-btn{}</style>";
@@ -2631,15 +2360,19 @@ html snippet ( redirect ) -
 
 ```javascript
 <%{
-	input.uid = input.uid;
 	// 	uid = zoho.encryption.base64Decode(uid); 
 	// 	criteria = "(Mobile:equals:" + uid + ")";
 	// 	search_contact = zoho.crm.searchRecords("Contacts",criteria);
 	// 	related_deals = if(search_contact.size() > 0,zoho.crm.getRelatedRecords("Deals","Contacts",search_contact.get(0).get("id").toLong()),list());	
 	// 	form_url = "#Form:Customer_Detail";
+
+	input.uid = input.uid;
 	related_deals = if(input.uid.isNumber(),zoho.crm.getRelatedRecords("Deals","Contacts",input.uid.toLong()),list());
+
 	form_url = "https://creatorapp.zohopublic.com/sanjay645/application-tracker/form-perma/Customer_Detail/DxkPY6WrhORFuajTa7UgNSFPwdgukrqAbDSsWHT3Eq5PfXstBZPenmKQXuyZQS6FEVyxGPxaGMy09WEnAS7fvdB36EKms3X0FOnJ";
+
 	%>
+
 <div style="font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f7f6; padding: 25px; border-radius: 12px;">
     <h1 style="color: #333; text-align: center; margin-bottom: 25px;">Application Details</h1>
 	<div style="margin-bottom: 20px;">
@@ -2650,11 +2383,10 @@ html snippet ( redirect ) -
         </button>
     </a>
 </div>
-<%
-	if(related_deals.size() > 0)
-```
 
-```json
+<%
+
+	if(related_deals.size() > 0)
 	{
 		for each  deal in related_deals
 		{
@@ -2675,7 +2407,9 @@ html snippet ( redirect ) -
 			{
 				related_cases.add(caseMap.get(key));
 			}
+
 			%>
+
 <div style="background-color: #ffffff; padding: 20px; border-radius: 10px; border-left: 6px solid #20B2E3; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 30px;">
         <h2 style="margin-top: 0; color: #20B2E3; font-size: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Deal: <%=deal.get("Deal_Name")%></h2>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 15px; padding-top: 10px;">
@@ -2708,6 +2442,7 @@ html snippet ( redirect ) -
 			{
 				%>
 <div style="color:#999; padding-top:10px; font-style:italic;">No open processes.</div>
+
 <%
 			}
 			%>
@@ -2736,23 +2471,20 @@ html snippet ( redirect ) -
 			{
 				%>
 <div style="color:#999; padding-top:10px; font-style:italic;">No closed processes.</div>
+
 <%
 			}
+
 			%>
 </div>
 
         </div>
     </div>
+
 <%
 		}
 	}
-```
-
-```javascript
 	else
-```
-
-```json
 	{
 		%>
 <div style="text-align: center; padding: 40px; background-color: #ffe5e5; border-radius: 12px; border: 1px solid #ff6b6b; color: #c62828; font-family: 'Segoe UI', Arial, sans-serif; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
@@ -2764,11 +2496,9 @@ html snippet ( redirect ) -
         Please double-check your information and try again.
     </p>
 </div>
+
 <%
 	}
-```
-
-```javascript
 	%>
 </div>
 <%
@@ -2788,9 +2518,6 @@ html snippet ( redirect ) -
 // leadId = "6103868000006230215";
 lead = zoho.crm.getRecordById("Leads",leadId);
 if(lead.get("Lead_Status") == "Qualified")
-```
-
-```json
 {
 	// For Contact
 	contactMap = Map();
@@ -2829,16 +2556,13 @@ if(lead.get("Lead_Status") == "Qualified")
 	convert = zoho.crm.convertLead(leadId,convertMap);
 	info convert;
 }
+
 ```
-
-
-
 
 
 ---
 
 # ZET Code for CRM :
-
 
 ```javascript
 ZOHO.embeddedApp.on("PageLoad", async function (data) {
@@ -2871,8 +2595,6 @@ ZOHO.embeddedApp.on("PageLoad", async function (data) {
 });
 
 ZOHO.embeddedApp.init();
-
-
 
 
 console.log("......First......")
