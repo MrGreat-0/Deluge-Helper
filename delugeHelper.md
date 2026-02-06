@@ -144,9 +144,6 @@ Json Format -- Create Quotes and Show in Deals --
 ```
 
 
-
-
-
 ---
 
 # Add in Multi-Select Lookup in AccountsXContacts using invoke :
@@ -421,7 +418,6 @@ Json Format -- for Updating in Multi - Lookpup in AccountsXContacts --
 ```
 
 
-
 ---
 
 # Upload files from Attachments in Deal Record to WorkDrive :
@@ -680,7 +676,6 @@ mp.put("File_Upload",fileList);
 update = zoho.crm.updateRecord("Leads", leadId, mp);
 info update;
 
-
 ```
 
 
@@ -714,7 +709,7 @@ info resp;
 # Take items from Deal Record (Sub-Form) and Create Element Record with Name & Category :
 
 ```javascript
-// console.log(".................START.................");
+console.log(".................START.................");
 
 const stage = ZDK.Page.getField("Stage").getValue();
 
@@ -762,9 +757,7 @@ if (elementNameArray.length > 0 && elementCategoryArray.length > 0) {
     return;
 }
 
-// console.log(".................END.................");
-
-
+console.log(".................END.................");
 ```
 
 
@@ -798,8 +791,6 @@ if (amount !== null || amount !== undefined) {
 
 
 console.log(".................END.................");
-
-
 ```
 
 
@@ -833,7 +824,6 @@ Note - Take from Quotes Items & add products in same Deal Records(Both are Relat
 ---
 
 # Auto Age Calculate :
-
 
 ```javascript
 // extract DOB
@@ -879,8 +869,6 @@ if(day < 0)
 
 age = year + "y " + month + "m " + day + "d " + " | " + currentHour + ":" + currentMinute + ":" + currentSecond;
 info age;
-
-
 ```
 
 
@@ -945,7 +933,6 @@ else{
 
 Json Format -- Create Invoice and Show in Deals (Transaction) --
 
-
 ```json
 {
   "Subject": "Sample",
@@ -974,7 +961,6 @@ Json Format -- Create Invoice and Show in Deals (Transaction) --
 ---
 
 # Create a Duplicate List in Related List using Related Function in Leads (part-1):
-
 
 ```javascript
 leadId = "1158761000000572119";
@@ -1019,7 +1005,6 @@ return relatedListXML;
 
 XML format --
 
-
 ```javascript
 <record>
 	<row no='0'>
@@ -1035,15 +1020,12 @@ XML format --
 		<FL val='Phone'>9876543210</FL>
 	</row>
 </record>
-
-
 ```
 
 
 ---
 
 # Remove all alphabet & special character using regex :
-
 
 ```javascript
 	number = "$%^#$336356sjkdf456";
@@ -1056,7 +1038,6 @@ XML format --
 ---
 
 # Create a Duplicate List in Related List using Related Function in Leads (part-2) :
-
 
 ```javascript
 string related_list.create_list_in_leads(String leadId)
@@ -1228,7 +1209,6 @@ else
 
 XML format --
 
-
 ```javascript
 <record>
 	<row no='0'>
@@ -1256,8 +1236,6 @@ XML format --
 		<FL val='Name'> Lead - 2 | Contact - 1</FL>
 	</row>
 </record>
-
-
 ```
 
 
@@ -1360,8 +1338,6 @@ XML format for Duplicate List in Related List --
 		<FL val='Size'>1.25 MB</FL>
 	</row>
 </record>
-
-
 ```
 
 
@@ -1434,16 +1410,12 @@ else
 }
 
 return relatedListXML;
-
-
 ```
 
 
 ---
 
 # Get Files from Workdrive and Show in Related List using XML  (part-3) :
-
-
 ```javascript
 // dealId = "1043751000009630359";
 dealData = zoho.crm.getRecordById("Deals",dealId);
@@ -1512,15 +1484,12 @@ else
 }
 
 return relatedListXML;
-
-
 ```
 
 
 ---
 
 # Mobile Validator in Lead using Layout Rule :
-
 
 ```javascript
 entityMap = crmAPIRequest.toMap().get("record");
@@ -1535,15 +1504,12 @@ if(mobile != "" && mobile.matches("^[0-9]{10}$") == false)
 }
 
 return "";
-
-
 ```
 
 
 ---
 
 # If Closed Won Stage is change to another Stage, it will gives error using Layout Rule :
-
 
 ```javascript
 entityMap = crmAPIRequest.toMap().get("record");
@@ -1565,15 +1531,12 @@ else
 }
 
 return response;
-
-
 ```
 
 
 ---
 
 # Auto Fill Pickup List in ClientScript :
-
 
 ```javascript
 const service = ZDK.Page.getField("Practices_and_Services").getValue();
@@ -1593,14 +1556,12 @@ if (service) {
         ZDK.Page.getField("Sub_Practice_Area").setValue(subPractice);
     // }
 }
-
 ```
 
 
 ---
 
 # Bulk Auto Update "Product Code" Field in Product Module :
-
 
 ```javascript
 product_data = zoho.crm.getRecords("Products",0,200,{"cvid":785423000001339227});
@@ -1685,7 +1646,6 @@ if (isLeadDuplicate && isContactDuplicate) {
 
 # Find Duplicates in Leads & Contacts Module using Clientscript (Part - 2) :
 
-
 ```javascript
 const leadMobile = ZDK.Page.getField("Mobile").getValue();
 const leadMobileField = ZDK.Page.getField("Mobile");
@@ -1730,15 +1690,12 @@ if (isLeadDuplicate && isContactDuplicate) {
     duplicateName = "Contact Record";
     leadMobileField.showError(`This mobile number is already in ${duplicateName}, Owner : ${leadOwner.name}.`);
 }
-
-
 ```
 
 
 ---
 
 # Update Status which have Blueprint transition using Deluge (Part - 1):
-
 
 ```javascript
 caseId = "1043751000008644045";
@@ -1781,7 +1738,6 @@ info update;
 
 Json Format --
 
-
 ```json
 {
   "blueprint": [
@@ -1797,13 +1753,9 @@ Json Format --
 ```
 
 
-
-
-
 ---
 
 # Update Status to "Hold" which have Blueprint transition apart from "Visa Approved" or "Visa Rejected" using Deluge (Part - 2) :
-
 
 ```javascript
 dealId = "1043751000007135808";
@@ -1876,15 +1828,12 @@ if(num.length() > 10)
 }
 
 info num;
-
-
 ```
 
 
 ---
 
 # How to get Rollup Summary Field Value using Deluge :
-
 
 ```javascript
 deal_id = "1158761000000660337";
@@ -1904,7 +1853,6 @@ info response.get("data").getJson("Rollup_Summary");
 ---
 
 # Close all task in Case(application) inside an Deals Module :
-
 
 ```javascript
 deal_id = "1043751000007110324";
@@ -1931,77 +1879,81 @@ for each  case in deal_related
 
 # Create Multiple Deal with certain condition (Multiple Countries) :
 
-
 ```javascript
-res = zoho.crm.getRecordById("Deals",id);
-Country_of_Interest = res.get("Country_of_Interest");
-istrue = true;
-if(Country_of_Interest.size() > 1)
+// Fetch deal record
+dealRecord = zoho.crm.getRecordById("Deals", id);
+countriesOfInterest = dealRecord.get("Country_of_Interest");
+isFirstCountry = true;
+
+// Check if multiple countries exist
+if(countriesOfInterest.size() > 1)
 {
-	for each  new in Country_of_Interest
-	{
-		intakeDate = res.get("Possible_Intake");
-		monthYear = intakeDate.toDate().toString("MMM yyyy");
-		// Build new Deal Name
-		originalName = res.get("Deal_Name");
-		newDealName = originalName + "/" + new + "/" + monthYear;
-		list_p = list();
-		list_p.add(new);
-		if(isTrue)
-		{
-			info "15";
-			updateMap = Map();
-			updateMap.put("Country_of_Interest",list_p);
-			updateMap.put("Deal_Name",newDealName);
-			update = zoho.crm.updateRecord("Deals",id,updateMap);
-			// 			info update;
-			istrue = false;
-		}
-		else
-		{
-			//---------------------------------------
-			// CLEAN MAP BEFORE CREATING NEW RECORD
-			//---------------------------------------
-			cleanMap = res.toMap();
-			cleanMap.remove("id");
-			cleanMap.remove("Owner");
-			cleanMap.remove("Created_Time");
-			cleanMap.remove("Modified_Time");
-			cleanMap.remove("Created_By");
-			cleanMap.remove("Modified_By");
-			cleanMap.remove("Tag");
-			//---------------------------------------
-			// CREATE NEW DEAL
-			//---------------------------------------
-			Craete_Record = zoho.crm.createRecord("Deals",cleanMap);
-			// 			Craete_Record = zoho.crm.createRecord("Deals",res);
-			// 									info Craete_Record;
-			if(Craete_Record.get("id") != null)
-			{
-				list_A = list();
-				list_A.add(new);
-				updateMap2 = Map();
-				updateMap2.put("Country_of_Interest",list_A);
-				updateMap2.put("Deal_Name",newDealName);
-				update = zoho.crm.updateRecord("Deals",Craete_Record.get("id"),updateMap2);
-				// 				info update;
-				// 	info 22;
-			}
-		}
-	}
+    // Process each country
+    for each country in countriesOfInterest
+    {
+        // Generate deal name components
+        intakeDate = dealRecord.get("Possible_Intake");
+        formattedMonthYear = intakeDate.toDate().toString("MMM yyyy");
+        originalDealName = dealRecord.get("Deal_Name");
+        updatedDealName = originalDealName + "/" + country + "/" + formattedMonthYear;
+        
+        // Create single-item country list
+        singleCountryList = List();
+        singleCountryList.add(country);
+        
+        if(isFirstCountry)
+        {
+            // Update existing deal record
+            updateData = Map();
+            updateData.put("Country_of_Interest", singleCountryList);
+            updateData.put("Deal_Name", updatedDealName);
+            updateResponse = zoho.crm.updateRecord("Deals", id, updateData);
+            
+            isFirstCountry = false;
+        }
+        else
+        {
+            // Clone existing deal record
+            clonedDealData = dealRecord.toMap();
+            
+            // Remove system fields that shouldn't be copied
+            clonedDealData.remove("id");
+            clonedDealData.remove("Owner");
+            clonedDealData.remove("Created_Time");
+            clonedDealData.remove("Modified_Time");
+            clonedDealData.remove("Created_By");
+            clonedDealData.remove("Modified_By");
+            clonedDealData.remove("Tag");
+            
+            // Create new deal record
+            createResponse = zoho.crm.createRecord("Deals", clonedDealData);
+            
+            // Update the newly created deal
+            if(createResponse.get("id") != null)
+            {
+                newDealId = createResponse.get("id");
+                
+                updateData = Map();
+                updateData.put("Country_of_Interest", singleCountryList);
+                updateData.put("Deal_Name", updatedDealName);
+                updateResponse = zoho.crm.updateRecord("Deals", newDealId, updateData);
+            }
+        }
+    }
 }
 else
 {
-	dealname = res.get("Deal_Name");
-	countryofinterest = res.get("Country_of_Interest");
-	possibleIntake = res.get("Possible_Intake");
-	monthYear = possibleIntake.toDate().toString("MMM yyyy");
-	newDealName = dealname + "/" + countryofinterest + "/" + monthYear;
-	// 	info monthYear;
-	updateMap = Map();
-	updateMap.put("Deal_Name",newDealName);
-	updateRes = zoho.crm.updateRecord("Deals",id,updateMap);
-	// 	info updateRes;
+    // Handle single country scenario
+    currentDealName = dealRecord.get("Deal_Name");
+    country = dealRecord.get("Country_of_Interest");
+    intakeDate = dealRecord.get("Possible_Intake");
+    formattedMonthYear = intakeDate.toDate().toString("MMM yyyy");
+    updatedDealName = currentDealName + "/" + country + "/" + formattedMonthYear;
+    
+    // Update deal name only
+    updateData = Map();
+    updateData.put("Deal_Name", updatedDealName);
+    updateResponse = zoho.crm.updateRecord("Deals", id, updateData);
 }
 ```
 
@@ -2136,7 +2088,6 @@ else
 
 # Create a new call record using deluge (Part - 1):
 
-
 ```javascript
 number = "+917987322610";
 dateString = "13/01/2026";
@@ -2163,7 +2114,6 @@ info create;
 ---
 
 # Create a new call record using deluge (Part - 2):
-
 
 ```javascript
 mobile = "+911234567890";
@@ -2200,9 +2150,7 @@ info response;
 
 # Get data from CRM and Show in redirect HTML Page in ZOHO CREATOR :
 
-
 OnLoad -
-
 
 ```javascript
 // Display Company Logo
@@ -2321,10 +2269,7 @@ else
 }
 ```
 
-
-
 html snippet ( redirect ) -
-
 
 ```javascript
 <%{
@@ -2472,15 +2417,12 @@ html snippet ( redirect ) -
 <%
 
 }%>
-
-
 ```
 
 
 ---
 
 # Auto Lead Conversion in Contacts, Acocunts and Deals Module :
-
 
 ```javascript
 // leadId = "6103868000006230215";
