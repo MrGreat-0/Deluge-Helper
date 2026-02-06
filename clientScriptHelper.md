@@ -1,0 +1,221 @@
+# Take items from Deal Record (Sub-Form) and Create Element Record with Name & Category :
+
+```javascript
+console.log(".................START.................");
+
+const stage = ZDK.Page.getField("Stage").getValue();
+
+if (stage !== "Closed Won") {
+    ZDK.Client.showAlert(`Deal must be "Closed Won" to proceed.`);
+    // console.log ("It's not Closed Won");
+    return;
+}
+
+const items = ZDK.Page.getSubform("Items").getValues();
+// console.log(items);
+
+let elementNameArray = [];
+let elementCategoryArray = [];
+
+if (items.length !== 0) {
+
+items.forEach(item => {
+    const prodName = item.Product_Name_1;
+    const prodCategory = item.Product_Category;
+
+    //     console.log(item);
+    //     console.log(`prodName : ${prodName} ,  prodCategory : ${prodCategory}`);
+
+    elementNameArray.push(prodName);
+    elementCategoryArray.push(prodCategory);
+});
+} else {
+    ZDK.Client.showAlert("There is no items in Sub-Form named items");
+        // console.log("There is no items in Sub-Form named items");
+        return;
+}
+
+if (elementNameArray.length > 0 && elementCategoryArray.length > 0) {
+    const element = new ZDK.Apps.CRM.Elements.Models.Elements();
+
+    element.Name = elementNameArray.join(", ");
+    element.Element_Category = elementCategoryArray.join(", ");
+
+    const res = ZDK.Apps.CRM.Elements.create(element);
+    // console.log(res[0]._status);
+    ZDK.Client.showMessage("Element record created successfully.");
+} else {
+    ZDK.Client.showAlert("Something went wrong!");
+    return;
+}
+
+console.log(".................END.................");
+```
+
+
+---
+
+# Set value (Amount Field) in Quotes Create Page :
+
+```javascript
+Note : Create quotes in deal record.
+
+console.log(".................START.................");
+
+const dealName = ZDK.Page.getField("Deal_Name").getValue();
+// console.log(dealName.id);
+
+var parentId = $Page.parent_record_id;
+console.log(parentId);
+console.log($Crm.user);
+console.log($Page.record_id);
+
+const dealData = ZDK.Apps.CRM.Deals.fetchById(dealName.id);
+// console.log(dealData._Amount);
+
+const amount = dealData._Amount;
+
+if (amount !== null || amount !== undefined) {
+    ZDK.Page.getField("Amount").setValue(amount);
+} else {
+    console.log("Something went wrong!")
+}
+
+console.log(".................END.................");
+```
+
+---
+
+# Auto Fill Pickup List in ClientScript :
+
+```javascript
+const service = ZDK.Page.getField("Practices_and_Services").getValue();
+// console.log(service);
+
+if (service) {
+    const product = ZDK.Apps.CRM.Products.fetchById(service.id);
+    console.log(product);
+    const practice = product._Practice_Area;
+    const subPractice = product._Sub_Practice_Area;
+    console.log(practice);
+    console.log(subPractice);
+    // if (practice) {
+        ZDK.Page.getField("Practice_Area").setValue(practice);
+    // }
+    // if (subPractice) {
+        ZDK.Page.getField("Sub_Practice_Area").setValue(subPractice);
+    // }
+}
+```
+
+
+---
+
+# Find Duplicates in Leads & Contacts Module using Clientscript (Part - 1) :
+
+```javascript
+const leadMobile = ZDK.Page.getField("Mobile").getValue();
+const leadOwner = ZDK.Page.getField("Owner").getValue();
+
+const leads = ZDK.Apps.CRM.Leads.fetch();
+const contacts = ZDK.Apps.CRM.Contacts.fetch();
+
+////////////////////////////////////////////////////////////
+
+let isLeadDuplicate = false;
+let isContactDuplicate = false;
+
+leads.forEach(lead => {
+    const mobile = lead._Mobile;
+    if (leadMobile && mobile && leadMobile === mobile) {
+        isLeadDuplicate = true;
+    }
+});
+
+contacts.forEach(contact => {
+    const mobile = contact._Mobile;
+    if (leadMobile && mobile && leadMobile === mobile) {
+        isContactDuplicate = true;
+    }
+});
+
+///////////////////////////////////////////////////////////
+
+const isLeadDuplicate = leads.some(lead => {
+    const mobile = lead._Mobile;
+    return leadMobile && mobile && leadMobile === mobile;
+});
+
+const isContactDuplicate = contacts.some(contact => {
+    const mobile = contact._Mobile;
+    return leadMobile && mobile && leadMobile === mobile;
+});
+
+let duplicateName = "";
+
+if (isLeadDuplicate && isContactDuplicate) {
+    duplicateName = "Lead & Contact Record";
+    ZDK.Client.showAlert(`This mobile number is already in ${duplicateName}, Owner : ${leadOwner.name}.`);
+} else if (isLeadDuplicate) {
+    duplicateName = "Lead Record";
+    ZDK.Client.showAlert(`This mobile number is already in ${duplicateName}, Owner : ${leadOwner.name}.`);
+} else if (isContactDuplicate) {
+    duplicateName = "Contact Record";
+    ZDK.Client.showAlert(`This mobile number is already in ${duplicateName}, Owner : ${leadOwner.name}.`);
+}
+
+
+```
+
+
+---
+
+# Find Duplicates in Leads & Contacts Module using Clientscript (Part - 2) :
+
+```javascript
+const leadMobile = ZDK.Page.getField("Mobile").getValue();
+const leadMobileField = ZDK.Page.getField("Mobile");
+
+const leadOwner = ZDK.Page.getField("Owner").getValue();
+
+let isLeadDuplicate = false;
+let isContactDuplicate = false;
+
+try {
+    const leads = await zrc.get('/crm/v8/Leads/search', {
+        params: { phone: leadMobile, fields: 'Owner,Mobile' }
+    });
+    // console.log(leads.data.data);
+    if (leads.data && leads.data.data.length > 0) {
+        isLeadDuplicate = true;
+    }
+} catch (error) {
+    console.log("Error fetching leads: " + error.message);
+}
+
+try {
+    const contacts = await zrc.get('/crm/v8/Contacts/search', {
+        params: { phone: leadMobile, fields: 'Owner,Mobile' }
+    });
+    if (contacts.data && contacts.data.data.length > 0) {
+        isContactDuplicate = true;
+    }
+} catch (error) {
+    console.log("Error fetching contacts: " + error.message);
+}
+
+let duplicateName = "";
+
+if (isLeadDuplicate && isContactDuplicate) {
+    duplicateName = "Lead & Contact Record";
+    leadMobileField.showError(`This mobile number is already in ${duplicateName}, Owner : ${leadOwner.name}.`);
+} else if (isLeadDuplicate) {
+    duplicateName = "Lead Record";
+    leadMobileField.showError(`This mobile number is already in ${duplicateName}, Owner : ${leadOwner.name}.`);
+} else if (isContactDuplicate) {
+    duplicateName = "Contact Record";
+    leadMobileField.showError(`This mobile number is already in ${duplicateName}, Owner : ${leadOwner.name}.`);
+}
+```
+
+---
