@@ -157,6 +157,7 @@ accID = "1136779000000569096";
 multContID1 = "1136779000000569290";
 multContID2 = "1136779000000572469";
 multContID3 = "1136779000000569287";
+
 // response = invokeurl
 // [
 // 	url :"https://www.zohoapis.in/crm/v2.1/Accounts/" + accID
@@ -164,6 +165,7 @@ multContID3 = "1136779000000569287";
 // 	connection:"getdata"
 // ];
 // info response;
+
 contList = List();
 cont1 = Map();
 cont1.put("id",multContID1);
@@ -173,6 +175,7 @@ cont111 = Map();
 cont111.put(cont11);
 contList.add(cont111);
 // info cont111;
+
 cont2 = Map();
 cont2.put("id",multContID2);
 cont22 = Map();
@@ -181,28 +184,26 @@ cont222 = Map();
 cont222.put(cont22);
 contList.add(cont222);
 // info contList;
+
 obj1Map = Map();
 obj1Map.put("id",accID);
 obj1Map.put("Add_Contacts",contList);
 // info obj1Map;
+
 objList = List();
 objList.add(obj1Map);
 multMap = Map();
 multMap.put("data",objList);
 info multMap;
-resp = invokeurl
-```
 
-```json
+resp = invokeurl
 [
  	url :"https://www.zohoapis.in/crm/v8/Accounts/" + accID
  	type :PUT
  	parameters:multMap.toString()
  	connection:"getdata"
 ];
-```
 
-```javascript
 info resp;
 ```
 
@@ -232,9 +233,6 @@ Json Format -- Create Quotes and Show in Deals --
 ```
 
 
-
-
-
 ---
 
 # Find Duplicate in Leads and Contacts Module and Add in Multi-Pickup List ( when lead is created ) :
@@ -259,8 +257,6 @@ if(leadSize > 1){
 	duplicateName = "No Duplicate";
 	info duplicateName;
 }
-
-
 
 // Check Contact Duplicate...
 
@@ -303,13 +299,9 @@ Json Format -- for Adding in Multi-Pickup List --
 ```
 
 
-
-
-
 ---
 
 # Add in Multi-Select Lookup in AccountsXContacts:
-
 
 ```javascript
  	accId = "1136779000000726001";
@@ -343,13 +335,9 @@ Json Format -- for Updating in Multi - Lookpup in AccountsXContacts --
 ```
 
 
-
-
-
 ---
 
 # Auto Folder Creation In WorkDrive For Deals :
-
 
 ```javascript
 dealId = "1234567890";
@@ -360,17 +348,17 @@ attMap = Map();
 attMap.put("name",dealId);
 attMap.put("parent_id",folderId);
 // info attMap;
+
 wrapMap = Map();
 wrapMap.put("attributes",attMap);
 wrapMap.put("type","files");
 // info wrapMap;
+
 dataMap = Map();
 dataMap.put("data",wrapMap);
 // info dataMap;
-response = invokeurl
-```
 
-```json
+response = invokeurl
 [
  	url :" https://www.zohoapis.in/workdrive/api/v1/files"
  	type :POST
@@ -378,15 +366,15 @@ response = invokeurl
  	headers:header
  	connection:"workdrive"
 ];
-```
 
-```javascript
 info response;
 newFolderId = response.get("data").get("attributes").get("permalink");
 // info newFolderId;
+
 urlMap = Map();
 urlMap.put("URL",newFolderId);
 // 	info urlMap;
+
 updateDeal = zoho.crm.updateRecord("Deals",dealId,urlMap);
 info updateDeal;
 ```
@@ -407,13 +395,9 @@ Json Format -- for autoFolderCreationInWorkDriveForDeals --
 ```
 
 
-
-
-
 ---
 
 # Add in Multi-Select Lookup in AccountsXUsers:
-
 
 ```javascript
  userId = "1136779000000426001";
@@ -508,9 +492,6 @@ Json Format -- for Uplad File In WorkDrive From Attachments in Deals --
 ```
 
 
-
-
-
 ---
 
 # Update Tag -- It add new tag & remove old tag : 
@@ -556,13 +537,9 @@ Json Format -- Update Tag --
 ```
 
 
-
-
-
 ---
 
 # Add a new Tag and keep the existing one's :
-
 
 ```javascript
 dealId = "1136779000000758081";
@@ -615,10 +592,6 @@ Json Format --
   ]
 }
 ```
-
-
-
-
 
 ---
 
@@ -723,15 +696,15 @@ leadRecord = zoho.crm.getRecordById("Leads", leadId);
 attId = leadRecord.get("File_Upload").getJSON("attachment_Id");
 // info attId;
 
-		file = invokeurl
-		[
-			url :"https://www.zohoapis.in/crm/v2/Leads/" + leadId + "/Attachments/" + attId
-			type :GET
-			connection:"zohofile"
-		];
+file = invokeurl
+[
+url :"https://www.zohoapis.in/crm/v2/Leads/" + leadId + "/Attachments/" + attId
+type :GET
+connection:"zohofile"
+];
 
-		resp = zoho.crm.attachFile("Leads", leadId, file);
-		info resp;
+resp = zoho.crm.attachFile("Leads", leadId, file);
+info resp;
 
 ```
 
@@ -739,7 +712,6 @@ attId = leadRecord.get("File_Upload").getJSON("attachment_Id");
 ---
 
 # Take items from Deal Record (Sub-Form) and Create Element Record with Name & Category :
-
 
 ```javascript
 // console.log(".................START.................");
@@ -1882,13 +1854,9 @@ if(get_related_data.size() > 0)
 ```
 
 
-
-
-
 ---
 
 # Some Helpful Function :
-
 
 ```javascript
 str = "one/two/three/four/four";
@@ -2562,9 +2530,12 @@ if(lead.get("Lead_Status") == "Qualified")
 
 ---
 
-# ZET Code for CRM :
+# ZET Code for CRM (Async Vesion) Part - 1 :
 
 ```javascript
+
+console.log("......First......");
+
 ZOHO.embeddedApp.on("PageLoad", async function (data) {
     try {
         console.log("PageLoad data:", data);
@@ -2576,7 +2547,7 @@ ZOHO.embeddedApp.on("PageLoad", async function (data) {
             throw new Error("Missing CRM context");
         }
 
-        // ✅ await ONLY the API call
+        // await ONLY the API call
         const response = await ZOHO.CRM.API.getRecord({
             Entity: module,
             RecordID: taskId
@@ -2596,8 +2567,18 @@ ZOHO.embeddedApp.on("PageLoad", async function (data) {
 
 ZOHO.embeddedApp.init();
 
+console.log("......Last......");
 
-console.log("......First......")
+```
+
+
+---
+
+# ZET Code for CRM (.then Vesion) Part - 2 :
+
+```javascript
+
+console.log("......First......");
 
 ZOHO.embeddedApp.on("PageLoad", function (data) {
 
@@ -2619,14 +2600,8 @@ ZOHO.embeddedApp.on("PageLoad", function (data) {
 
 ZOHO.embeddedApp.init();
 
-
 console.log("......Last......");
-
 
 ```
 
-
 ---
-
-#  :
-
