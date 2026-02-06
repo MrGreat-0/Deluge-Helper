@@ -2186,7 +2186,10 @@ if(lead.get("Lead_Status") == "Qualified")
 
 
 
-# ZET Code for CRM :
+# ZET Code for CRM (Async Vesion) Part - 1 :
+
+
+console.log("......First......");
 
 ZOHO.embeddedApp.on("PageLoad", async function (data) {
     try {
@@ -2199,7 +2202,7 @@ ZOHO.embeddedApp.on("PageLoad", async function (data) {
             throw new Error("Missing CRM context");
         }
 
-        // ✅ await ONLY the API call
+        // await ONLY the API call
         const response = await ZOHO.CRM.API.getRecord({
             Entity: module,
             RecordID: taskId
@@ -2219,10 +2222,15 @@ ZOHO.embeddedApp.on("PageLoad", async function (data) {
 
 ZOHO.embeddedApp.init();
 
+console.log("......Last......");
 
 
 
-console.log("......First......")
+
+# ZET Code for CRM (.then Vesion) Part - 2 :
+
+
+console.log("......First......");
 
 ZOHO.embeddedApp.on("PageLoad", function (data) {
 
@@ -2243,7 +2251,6 @@ ZOHO.embeddedApp.on("PageLoad", function (data) {
 });
 
 ZOHO.embeddedApp.init();
-
 
 console.log("......Last......");
 
