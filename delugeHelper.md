@@ -1992,17 +1992,14 @@ info call_data;
 
 if(call_number != null && call_number != "")
 {
-	// If number already starts with 91 → no change
 	if(call_number.startsWith("91"))
 	{
 		// do nothing
 	}
-	// If number starts with 0 → remove 0 and add 91
 	else if(call_number.startsWith("0"))
 	{
 		call_number = "91" + call_number.substring(1);
 	}
-	// Otherwise → just add 91
 	else
 	{
 		call_number = "91" + call_number;
