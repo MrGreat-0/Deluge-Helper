@@ -1970,3 +1970,123 @@ if(lead.get("Lead_Status") == "Qualified")
 ```
 
 ---
+
+# Search and Associate - Calls
+Note: If there is not mobile number(Call) in Lead record just create it.
+
+```javascript
+
+// id = "991021000006782255";
+call_data = invokeurl
+[
+	url :"https://www.zohoapis.in/crm/v8/Calls/" + id
+	type :GET
+	connection:"zoho_crm"
+];
+
+call_type = call_data.get("data").getJson("Call_Type");
+related_to = call_data.get("data").getJson("What_Id");
+call_number = call_data.get("data").getJson("To_Number__s");
+// call_owner = call_data.get("data").getJson("Owner").get("id");
+info call_data;
+
+if(call_number != null && call_number != "")
+{
+	// If number already starts with 91 → no change
+	if(call_number.startsWith("91"))
+	{
+		// do nothing
+	}
+	// If number starts with 0 → remove 0 and add 91
+	else if(call_number.startsWith("0"))
+	{
+		call_number = "91" + call_number.substring(1);
+	}
+	// Otherwise → just add 91
+	else
+	{
+		call_number = "91" + call_number;
+	}
+}
+
+if(call_type == "Missed" && related_to == null)
+{
+	criteria = "(Mobile:equals:" + call_number + ")";
+	search_lead = zoho.crm.searchRecords("Leads",criteria);
+	// info search_lead.size();
+	if(search_lead.size() > 0)
+	{
+		lead_id = null;
+		for each  lead_rec in search_lead
+		{
+			lead_status = lead_rec.get("Lead_Status");
+			if(lead_status != "Junk Lead")
+			{
+				lead_id = lead_rec.get("id");
+				owner_id = lead_rec.get("Owner").get("id");
+				break;
+			}
+		}
+		if(lead_id == null)
+		{
+			lead_id = search_lead.get(0).get("id");
+			owner_id = search_lead.get(0).get("Owner").get("id");
+		}
+
+		update_related_to = zoho.crm.updateRecord("Calls",id,{"$se_module":"Leads","What_Id":lead_id});
+		info "if";
+
+		// Task Creation
+		currentDateTime = zoho.currenttime;
+		reminderTime = currentDateTime.addMinutes(2);
+		taskMap = Map();
+		taskMap.put("What_Id",lead_id);
+		taskMap.put("$se_module","Leads");
+		taskMap.put("Owner",owner_id);
+		taskMap.put("Subject","Missed Call Follow-up");
+		taskMap.put("Status","Not Started");
+		taskMap.put("Priority","High");
+		taskMap.put("Due_Date",zoho.currentdate);
+		taskMap.put("Remind_At",{"ALARM":"FREQ=NONE;ACTION=POPUP;TRIGGER=DATE-TIME:" + reminderTime.toString("yyyy-MM-dd'T'HH:mm:ssXXX")});
+		createdTask = zoho.crm.createRecord("Tasks",taskMap,{"trigger":{"workflow"}});
+		info createdTask;
+	}
+	else
+	{
+		leadMap = Map();
+		leadMap.put("Last_Name","Missed Call - " + call_number);
+		leadMap.put("Mobile",call_number);
+		leadMap.put("Lead_Status","Fresh Lead");
+		leadMap.put("Lead_Source","IVR Missed Call");
+		leadMap.put("Owner","991021000000455001");
+		create_lead = zoho.crm.createRecord("Leads",leadMap);
+		info "else";
+
+		if(create_lead != null && create_lead.containsKey("id"))
+		{
+			lead_id = create_lead.get("id");
+			lead_data = zoho.crm.getRecordById("Leads",lead_id);
+			owner_id = lead_data.get("Owner").get("id");
+			info zoho.crm.updateRecord("Calls",id,{"$se_module":"Leads","What_Id":lead_id});
+			info "2if";
+			
+			// Task Creation
+			currentDateTime = zoho.currenttime;
+			reminderTime = currentDateTime.addMinutes(2);
+			taskMap = Map();
+			taskMap.put("What_Id",lead_id);
+			taskMap.put("$se_module","Leads");
+			taskMap.put("Owner",owner_id);
+			taskMap.put("Subject","Missed Call Follow-up");
+			taskMap.put("Status","Not Started");
+			taskMap.put("Priority","High");
+			taskMap.put("Due_Date",zoho.currentdate);
+			taskMap.put("Remind_At",{"ALARM":"FREQ=NONE;ACTION=POPUP;TRIGGER=DATE-TIME:" + reminderTime.toString("yyyy-MM-dd'T'HH:mm:ssXXX")});
+			createdTask = zoho.crm.createRecord("Tasks",taskMap,{"trigger":{"workflow"}});
+			info createdTask;
+		}
+	}
+}
+```
+
+---
