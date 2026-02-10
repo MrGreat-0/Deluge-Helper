@@ -1466,7 +1466,40 @@ for each  rec in product_data
 }
 
 ```
+---
 
+# Auto Bulk Update ( 1000 record ) :
+
+```javascript
+
+cvid = "1234567890";
+module = "Deals";
+field_api = "Opportunity_Type";
+checkbox_api = "Tests";
+
+pages = {1, 2, 3, 4, 5}; 
+
+for each pg in pages
+{
+    lead_data = zoho.crm.getRecords(module, pg, 200, {"cvid": cvid});
+    
+    if(lead_data.size() > 0)
+    {
+        for each rec in lead_data
+        {
+            rec_id = rec.get("id");
+            res = zoho.crm.updateRecord(module, rec_id, {field_api : null, checkbox_api : true});
+			info res;
+        }
+    }
+    else {
+        break;
+    }
+    info "Page No. : " + pg;
+}
+info "done";
+
+```
 
 ---
 
