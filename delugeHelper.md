@@ -1971,8 +1971,8 @@ if(lead.get("Lead_Status") == "Qualified")
 
 ---
 
-# Search and Associate - Calls
-Note: If there is not mobile number(Call) in Lead record just create it.
+# Search and Associate - Missed Call Associator
+Note: If there is not mobile number in Lead record then just create it and associate with Call Record, otherwise just associate (Call Record) with existing lead record.
 
 ```javascript
 
