@@ -52,7 +52,6 @@ if (elementNameArray.length > 0 && elementCategoryArray.length > 0) {
 console.log(".................END.................");
 ```
 
-
 ---
 
 # Set value (Amount Field) in Quotes Create Page :
@@ -86,7 +85,7 @@ console.log(".................END.................");
 
 ---
 
-# Auto Fill Pickup List in ClientScript :
+# Auto Fill Pickup List in ClientScript (Part - 1) :
 
 ```javascript
 const service = ZDK.Page.getField("Practices_and_Services").getValue();
@@ -106,6 +105,100 @@ if (service) {
         ZDK.Page.getField("Sub_Practice_Area").setValue(subPractice);
     // }
 }
+```
+---
+
+# Auto Fill Fields and Lookup in ClientScript (Part - 2) :
+
+```javascript
+console.log(".................START.................");
+ 
+// DEAL DATA SECTION
+ 
+const dealLookup = ZDK.Page.getField("Deal_Name").getValue();
+ 
+if (!dealLookup || !dealLookup.id) {
+    console.log("No Deal linked to this Case.");
+} else {
+ 
+    try {
+ 
+        const dealData = ZDK.Apps.CRM.Deals.fetchById(dealLookup.id);
+ 
+        const productSegment = dealData._Product_Segment;
+        const opportunityType = dealData._Opportunity_Type;
+        const panelType = dealData._Panel_Type;
+        const quoteData = dealData._Quote_Data;
+ 
+        if (quoteData && quoteData.length > 0) {
+ 
+            const productLookup = quoteData[0].Product;
+ 
+            if (productLookup && productLookup.id) {
+ 
+                const productData = ZDK.Apps.CRM.Products.fetchById(productLookup.id);
+                const rating = productData._RATING;
+ 
+                ZDK.Page.getField("Product_Name").setValue(productLookup);
+                ZDK.Page.getField("Product_Segment").setValue(productSegment);
+                ZDK.Page.getField("Opportunity_Type").setValue(opportunityType);
+                ZDK.Page.getField("Panel_Type").setValue(panelType);
+                ZDK.Page.getField("KVA").setValue(rating);
+            }
+        }
+ 
+    } catch (error) {
+        console.log("Deal Section Error: " + error.message);
+    }
+}
+
+
+// CONTACT DATA SECTION
+ 
+const contactLookup = ZDK.Page.getField("Contact_Name").getValue();
+ 
+if (!contactLookup || !contactLookup.id) {
+    console.log("No Contact linked to this Case.");
+} else {
+ 
+    try {
+ 
+        const contactData = ZDK.Apps.CRM.Contacts.fetchById(contactLookup.id);
+ 
+        const email = contactData._Email;
+        const mobile = contactData._Mobile;
+        const firstName = contactData._First_Name || "";
+        const lastName = contactData._Last_Name || "";
+ 
+        const fullName = (firstName + " " + lastName).trim();
+ 
+        // Set Case Fields
+        ZDK.Page.getField("Customer_Name").setValue(fullName);
+        ZDK.Page.getField("Customer_E_mail").setValue(email);
+        ZDK.Page.getField("Customer_Mobile_No").setValue(mobile);
+ 
+        // Auto Subject (customize as needed)
+        ZDK.Page.getField("Subject").setValue("Complaint - " + fullName);
+ 
+        // Set Current Date
+        const today = new Date();
+        // .toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        // console.log(today.toLocaleDateString('en-GB'));
+        ZDK.Page.getField("Date_of_Complaint").setValue(today.toLocaleDateString('en-GB'));
+ 
+        const month = today.toLocaleString('en-US', { month: 'short' }); 
+        // console.log(month); // Feb
+        ZDK.Page.getField("Month").setValue(month);
+ 
+    } catch (error) {
+        console.log("Contact Section Error: " + error.message);
+    }
+}
+ 
+ZDK.Client.showMessage("Fields auto-filled successfully.");
+ 
+console.log(".................END.................");
+
 ```
 
 
