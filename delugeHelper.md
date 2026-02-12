@@ -2120,3 +2120,45 @@ if(call_type == "Missed" && related_to == null)
 ```
 
 ---
+
+# Types of Trigger :
+
+```javascript
+const triggerList = ["approval", "workflow", "blueprint", "pathfinder", "orchestration"];
+```
+
+## Create / Update Records
+
+```javascript
+
+// Create Record
+mp = {"Name":"Joe","Phone":"+1 678 XXX XXXX","Email":"joe@academy.com"};
+response = zoho.crm.createRecord("Leads",mp,{"trigger":{"workflow"}});
+
+// Update Record
+mp = {"Email":"joe@academy.com"};
+response = zoho.crm.updateRecord("Leads",mp,{"trigger":{"workflow"}});
+
+```
+
+## Assignment Rules
+
+```javascript
+
+response = zoho.crm.createRecord("Leads", mp, {"trigger":{"lar_id":"4409363000012741244"}});
+// OR
+response = zoho.crm.createRecord("Leads", mp, {"trigger":{"workflow","lar_id":"xxxxxxxxxxxxxxxxxxx"}});
+
+```
+
+## Blueprint
+
+```javascript
+
+response = zoho.crm.createRecord("Leads", mp, {"trigger":{"blueprint"}});
+// OR
+response = zoho.crm.createRecord("Leads", mp, {"trigger":{"workflow","blueprint","lar_id":"xxxxxxxxxxxxxxxxxxx"}});
+
+```
+
+---
