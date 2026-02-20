@@ -2,6 +2,9 @@
 [📄 Transcript Viewer](https://github.com/MrGreat-0/Transcript_Viewer)  
 A custom Zoho CRM widget for parsing and visualizing JSON-based call transcripts.
 
+[📄 Manage_Leave_Request](https://github.com/MrGreat-0/Manage_Leave_Request)  
+Zoho CRM widget for managing and bulk-approving leave requests from the Portal_People module.
+
 
 ---
 

@@ -2162,3 +2162,80 @@ response = zoho.crm.createRecord("Leads", mp, {"trigger":{"workflow","blueprint"
 ```
 
 ---
+
+# Create custom Signal :
+Note : It only works in Lead, Contact & Deal Module.
+
+```javascript
+
+// lead_id = "719220000021334519";
+
+namespace = "notifyreenquiry_notifyreenquiry";
+subject = "Re-Enquiry Created - Existing Lead";
+message = "Re-Enquiry has been created for existing lead. Lead ID: " + lead_id;
+// 	email = lead_data.get("Email"); // optional
+
+signalMap = Map();
+signalMap.put("signal_namespace",namespace);
+signalMap.put("id",lead_id);
+signalMap.put("subject",subject);
+signalMap.put("message",message);
+result = zoho.crm.raiseSignal(signalMap);
+info result;
+
+```
+
+---
+
+# Restrict User to modify field using Validation Rule :
+
+```javascript
+
+entityMap = crmAPIRequest.toMap().get("record");
+new_due_date = entityMap.get("Due_Date");
+record_id = entityMap.get("id");
+if(record_id != null)
+{
+	existing_record = zoho.crm.getRecordById("Tasks",record_id);
+	old_due_date = existing_record.get("Due_Date");
+	if(new_due_date != old_due_date)
+	{
+		response = Map();
+		response.put("status","error");
+		response.put("message","You are not allowed to edit the Due Date.");
+		return response;
+	}
+	else
+	{
+		response = Map();
+		response.put("status","success");
+	}
+}
+else
+{
+	response = Map();
+	response.put("status","success");
+}
+return response;
+
+```
+---
+
+# Search using COQL :
+Note : This function is searching if "1234567890" number contains("like").
+
+```javascript
+
+queryMap = Map();
+queryMap.put("select_query","select Mobile from Contacts where Mobile like '%1234567890%' and Mobile is not null limit 1000");
+response = invokeurl
+[
+	url :"https://www.zohoapis.in/crm/v8/coql"
+	type :POST
+	parameters:queryMap.toString()
+	connection:"zohocoql"
+];
+info response;
+
+```
+---
