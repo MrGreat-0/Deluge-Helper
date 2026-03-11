@@ -2239,3 +2239,73 @@ info response;
 
 ```
 ---
+
+# Send WhatsApp message through WA template :
+
+```javascript
+// https://survey.zohopublic.in/zs/JMDw5P
+// https://survey.zohopublic.in/zs/JMDw5P?fromservice=ZCRM&
+// https://survey.zohopublic.in/zs/JMDw5P?fromservice=ZCRM&zs_custommodule2=
+
+res = zoho.crm.getRecordById("IVR_Calls",id);
+Mobile_No = res.get("Caller_ID");
+info Mobile_No;
+if(Mobile_No != null)
+{
+	// Prepare WhatsApp API request details
+	toNumber = "+" + Mobile_No;
+	URL = "https://graph.facebook.com/v18.0/101496606391578/messages";
+
+	// API headers (content type + authentication token)
+	header = Map();
+	header.put("Content-Type","application/json");
+	header.put("Authorization","api key ex-> Bearer EAACJxqiRZBPABOxsevDhr7tj");
+
+	// Create request body for WhatsApp template message
+	body = Map();
+	body.put("messaging_product","whatsapp");
+	body.put("recipient_type","individual");
+	body.put("to",toNumber);
+	body.put("type","template");
+
+	// Define WhatsApp template details
+	template = Map();
+	template.put("name","thanks_for_calling");
+	template.put("language",{"code":"en"});
+
+	// Add template components (header image, body text, CTA button)
+	components = List();
+	imgVariable = {"type":"header","parameters":{{"type":"image","image":{"link":"https://www.msh.org.in/img/logo1.png"}}}};
+	components.add(imgVariable);
+	bodyVariable = {"type":"body"};
+	components.add(bodyVariable);
+
+	//CTA button
+	buttonVariable = {"type":"button","sub_type":"url","index":"0","parameters":{{"type":"text","text":id.toString()}}};
+	components.add(buttonVariable);
+	template.put("components",components);
+	body.put("template",template);
+	// info header;
+	// info body;
+
+	Response = invokeurl
+	[
+		url :URL
+		type :POST
+		parameters:body
+		headers:header
+		detailed:true
+	];
+	info Response;
+
+	updateMp = {"What_s_App_Response":Response};
+	update_record = zoho.crm.updateRecord("IVR_Calls",id,updateMp);
+}
+else
+{
+	info "mobile prob!";
+}
+
+```
+
+---
