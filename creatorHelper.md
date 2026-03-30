@@ -337,3 +337,37 @@ if(response.get("requests") != null)
 
 ```
 ---
+
+# Search in form and get report data :
+
+```javascript
+list = New_Reception[Reference_Code == "G176663"];
+
+// get one record data
+for each rec in list
+{
+	info "Reference_Code: " + rec.Reference_Code;
+	info "Mobile: " + rec.Mobile;
+	info "id: " + rec.Id1;  
+	info "Location: " + rec.Location;  
+	info "Entry Time: " + rec.Entry_Time1;  
+	break;
+}
+
+// For Table 
+html = "<table border='1' style='border-collapse:collapse;width:1text-align:center font-family:sans-serif;'>";
+html = html + "<tr style='background:#f2f2f2;'><th>Location</th><th>Entry Tith></tr>";
+
+for each  rec in list
+{
+	location = ifnull(rec.Location,"-");
+	entry_time = ifnull(rec.Entry_Time1,"-");
+	html = html + "<tr>";
+	html = html + "<td>" + location + "</td>";
+	html = html + "<td>" + entry_time + "</td>";
+	html = html + "</tr>";
+}
+html = html + "</table>";
+input.plain = html;
+
+```
