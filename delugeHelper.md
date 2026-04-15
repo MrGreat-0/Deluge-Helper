@@ -593,9 +593,8 @@ Json Format --
 
 # Send Mail using Deluge :
 
-
 ```javascript
-Method 1 (Without Template)- 
+### Method 1 (Without Template) - 
 
 sendmail
 [
@@ -606,10 +605,11 @@ sendmail
 	content type :HTML
 ]
 
-Method (With Template)-
+### Method 1 (With Template) -
 
 recipientEmail = "akashxwork@gmail.com";
 templateId = "1136779000000857005";
+
 templatedata = invokeurl
 [
 	url :"https://www.zohoapis.in/crm/v8/settings/email_templates/" + templateId
@@ -620,10 +620,12 @@ templatedata = invokeurl
 // info templatedata;
 templatecontent = templatedata.get("email_templates").get("0").get("content");
 // info templatecontent;
+
 LeadName = "Akhri Pasta";
 Email = recipientEmail;
 revisedcontent = templatecontent.replaceAll("\$\{!Leads.Full_Name\}",LeadName).replaceAll("\$\{!Leads.Email\}",Email);
 // info revisedcontent;
+
 sendmail
 [
 from: zoho.adminuserid
@@ -631,6 +633,27 @@ to: recipientEmail
 subject: "Welcome Email Template"
 message: revisedcontent
 ]
+
+### Method 2 (With Template) -
+
+id = "1234567890";
+template_id = "920302000014877634";
+FromEmail = "fromtest@mail.com";
+toEmail = "totestmail.com";
+
+url = "https://www.zohoapis.in/crm/v8/OA_Records/" + id + "/actions/send_mail";
+
+data = {"data":{{"from":{"email":FromEmail},"to":{{"email":toEmail}},"template":{"id":template_id}"org_email":true,"related_entity_id":id,"module":"OA_Records"}}};
+
+response = invokeurl
+[
+	url :url
+	type :POST
+	parameters:data.toString()
+	connection:"sendemailtemplate"
+];
+	
+info response;
 ```
 
 
@@ -2412,6 +2435,15 @@ if(response.get("requests") != null)
 ```javascript
 recordId = "1833590000049735036";
 
+dealData = zoho.crm.getRecordById("Deals", recordId);
+deal_owner_id = dealData.get("Owner").get("id");
+
+deal_owner_mail = zoho.crm.getRecordById("users", deal_owner_id).get("users").getJson("email");
+
+contId = dealData.get("Contact_Name").get("id");
+
+contMail = zoho.crm.getRecordById("Contacts", contId).get("Email");
+
 mailMergeMap = Map();
 
 // Template
@@ -2422,7 +2454,7 @@ mailMergeMap.put("mail_merge_template", templateMap);
 // From address
 fromMap = Map();
 fromMap.put("type", "email");
-fromMap.put("value", "test@internetmoguls.com");
+fromMap.put("value", deal_owner_mail);
 mailMergeMap.put("from_address", fromMap);
 
 // To address list
@@ -2430,7 +2462,7 @@ toList = List();
 
 to1 = Map();
 to1.put("type", "email");
-to1.put("value", "test@easytocheck.com");
+to1.put("value", contMail);
 
 toList.add(to1);
 
@@ -2468,6 +2500,16 @@ info response;
 
 ```javascript
 recordId = "1234567890";
+
+dealData = zoho.crm.getRecordById("Deals", recordId);
+deal_owner_id = dealData.get("Owner").get("id");
+
+deal_owner_mail = zoho.crm.getRecordById("users", deal_owner_id).get("users").getJson("email");
+
+contId = dealData.get("Contact_Name").get("id");
+
+contMail = zoho.crm.getRecordById("Contacts", contId).get("Email");
+
 templateName = "mailmergename";
 mailMergeMap = Map();
 
@@ -2479,7 +2521,7 @@ mailMergeMap.put("mail_merge_template", templateMap);
 // From address
 fromMap = Map();
 fromMap.put("type", "email");
-fromMap.put("value", "admin@gmail.com");
+fromMap.put("value", deal_owner_mail);
 mailMergeMap.put("from_address", fromMap);
 
 // To address list
@@ -2487,14 +2529,17 @@ toList = List();
 
 to1 = Map();
 to1.put("type", "email");
-to1.put("value", "test1@gmail.com");
+to1.put("value", contMail);
 
+toList.add(to1);
+
+//..........//
 to2 = Map();
 to2.put("type", "email");
 to2.put("value", "test2@gmail.com");
 
-toList.add(to1);
 toList.add(to2);
+//..........//
 
 mailMergeMap.put("to_address", toList);
 
@@ -2546,6 +2591,81 @@ response = invokeurl
 ];
 
 info response;
+```
+
+---
+
+# Auto lead conversion using webhook :
+
+```javascript
+string standalone.audit_survey(map crmAPIRequest)
+{
+    info crmAPIRequest;
+ 
+    bodyMap = crmAPIRequest.get("body");
+ 
+    if(bodyMap == null)
+    {
+        return "Error: Body missing";
+    }
+ 
+    responseId = bodyMap.get("resp_id");
+ 
+    if(responseId == null)
+    {
+        return "Error: resp_id missing";
+    }
+ 
+    // Search Lead
+    criteria = "(Response_Id:equals:" + responseId + ")";
+    leadSearch = zoho.crm.searchRecords("Leads", criteria);
+ 
+    if(leadSearch == null || leadSearch.size() == 0)
+    {
+        return "Error: No Lead found";
+    }
+ 
+    leadData = leadSearch.get(0);
+    leadId = leadData.get("id");
+ 
+    // Prevent duplicate conversion
+    if(leadData.get("Converted_Contact_Id") != null)
+    {
+        return "Already converted";
+    }
+ 
+	// Convert Lead
+	convertMap = Map();
+	convertMap.put("overwrite", true);
+	
+	// Get Lead Name
+	leadName = leadData.get("Full_Name");
+	if(leadName == null)
+	{
+		leadName = leadData.get("Last_Name"); // fallback
+	}
+	
+	// Deal creation
+	dealMap = Map();
+	dealMap.put("Deal_Name", leadName);   // Deal = Lead Name
+	dealMap.put("Stage", "Qualification");
+	
+	convertMap.put("Deals", dealMap);
+	
+	// Convert
+	convertResp = zoho.crm.convertLead(leadId.toLong(), convertMap);
+	return "Success: " + convertResp.toString();
+
+}
+```
+
+---
+
+# Record Delete Method :
+
+```javascript
+deleteRecordMap = {"module":"Leads","id":LeadID};
+zoho.crm.invokeConnector("crm.delete",deleteRecordMap);
 ```
 
 ---
