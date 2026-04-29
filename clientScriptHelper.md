@@ -312,3 +312,25 @@ if (isLeadDuplicate && isContactDuplicate) {
 ```
 
 ---
+
+# Search using COQL :
+
+```javascript
+// Define the query and parameters
+var parameters = {
+    "select_query": "select Last_Name, First_Name from Contacts where Last_Name is not null limit 3"
+};
+
+// Replace "connection_name" with the name you defined in the Connections setup
+var response = ZDK.Apps.CRM.Connections.invoke(
+    "connection_name",
+    "https://www.zohoapis.com/crm/v6/coql",
+    "POST",
+    2,
+    parameters,
+    {}
+);
+
+console.log(response);
+```
+---
