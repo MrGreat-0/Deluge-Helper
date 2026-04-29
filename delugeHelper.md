@@ -1171,6 +1171,18 @@ XML format --
 </record>
 ```
 
+---
+
+# Some Helpers for using Related Function :
+
+```javascript
+// if there is "&" in string - it helps from breaking XML
+acc_sub_segment = ifnull(accData.get("Sub_Segment"),"---").toString().replaceAll("&","&amp;");
+
+// for better visibility 
+url = "'https://crm.zoho.in/crm/org60040721686/tab/Accounts/" + account_id + "'";
+flName = "<FL val='Account Name' link='true' url=" + url + ">" + account_name + "</FL>";
+```
 
 ---
 
