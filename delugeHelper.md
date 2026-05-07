@@ -2824,3 +2824,86 @@ info resp;
 ```
 
 ---
+
+# Generate Dynamic Invoice Number :
+
+```javascript
+id = "1234567890";
+
+inv_data = zoho.crm.getRecordById("Invoices",id);
+inv_type = inv_data.get("Invoice_Type");
+
+// get fy
+curr_date = zoho.currentdate;
+year_val = year(curr_date);
+month_val = month(curr_date);
+
+if(month_val >= 4)
+{
+	start_year = year_val;
+	end_year = (year_val + 1).toString().right(2);
+}
+else
+{
+	start_year = year_val - 1;
+	end_year = year_val.toString().right(2);
+}
+
+fy = start_year + "-" + end_year;
+info fy;
+
+query = "select Invoice_No from Invoices where Invoice_Type = '" + inv_type + "' and Invoice_No like '%/" + fy + "/%' order by Created_Time desc limit 1";
+
+queryMap = Map();
+queryMap.put("select_query",query);
+
+response = invokeurl
+[
+	url :"https://www.zohoapis.com/crm/v8/coql"
+	type :POST
+	parameters:queryMap.toString()
+	connection:"zohocoql"
+];
+info response;
+
+prefix = "";
+
+if(inv_type == "IELTS & Visa Fees")
+{
+	prefix = "GLBD/" + fy;
+}
+else if(inv_type == "IELTS & Visa Fees Chandigarh")
+{
+	prefix = "GLB-CHD/" + fy;
+}
+else if(inv_type == "Commission from India")
+{
+	prefix = "GLBC/" + fy;
+}
+else if(inv_type == "Commission from Foreign University")
+{
+	prefix = "GLB/" + fy;
+}
+
+if(response == "")
+{
+	fullstr = prefix + "/1";
+}
+else
+{
+	data = response.get("data");
+	inv_no = data.get(0).get("Invoice_No");
+	info inv_no;
+	parts = inv_no.toList("/");
+	last_num = parts.get(2);
+	info last_num;
+	next_num = last_num.toLong() + 1;
+	fullstr = prefix + "/" + next_num;
+}
+info fullstr;
+
+up_inv = zoho.crm.updateRecord("Invoices",id,{"Invoice_No":fullstr});
+info up_inv;
+```
+
+---
